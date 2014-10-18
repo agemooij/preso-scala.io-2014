@@ -1,30 +1,23 @@
 import sbt._
 import sbt.Keys._
 
+import com.scalapenos.sbt.prompt._
+import SbtPrompt._
+import autoImport._
+
 import spray.revolver.RevolverPlugin.Revolver
 
 object Build extends Build {
   import Dependencies._
   import Formatting._
 
-  import com.scalapenos._
-  import com.scalapenos.SbtPrompt._
-  import autoImport._
-
   lazy val basicSettings = Seq(
     organization := "com.scalapenos",
     version := "0.1.0",
-    scalaVersion := "2.11.2",
+    scalaVersion := "2.11.3",
     scalacOptions := basicScalacOptions,
     incOptions := incOptions.value.withNameHashing(true),
-
-    promptSeparator := Separator("", (previous, next) => fg(previous.background).bg(next.background)),
-    promptSegments := Seq(
-      text(" SBT ", fg(235).bg(26)),
-      gitBranch(clean = fg(235).bg(34), dirty = fg(235).bg(214)).padLeft("  ").padRight(" "),
-      currentProject(fg(250).bg(235)).pad(" "),
-      text(" ", NoStyle)
-    )
+    promptTheme := PromptThemes.Scalapenos
   )
 
   lazy val appSettings = basicSettings ++ dependencySettings ++ formattingSettings ++ Revolver.settings
@@ -32,13 +25,13 @@ object Build extends Build {
   lazy val root = Project("spray-routing-preso", file("."))
     .settings(basicSettings: _*)
     .aggregate(
-      example1
+      e01
     )
 
 
-  lazy val example1 = Project("example-01", file("example-01-intro"))
+  lazy val e01 = Project("e01-basics", file("e01-basics"))
     .settings(appSettings: _*)
-    .settings(mainClass := Some("preso.spray.routing.example1"))
+    .settings(mainClass := Some("preso.e01.basics.Main"))
     .settings(libraryDependencies ++=
       compile(akkaActor) ++
       compile(akkaSlf4j) ++

@@ -7,7 +7,7 @@ object Dependencies {
     resolvers := Seq("Spray Repository" at "http://repo.spray.io/")
   )
 
-  val akkaVersion = "2.3.6"
+  val akkaVersion  = "2.3.6"
   val sprayVersion = "1.3.2"
 
   val akkaActor     = "com.typesafe.akka"  %% "akka-actor"       % akkaVersion

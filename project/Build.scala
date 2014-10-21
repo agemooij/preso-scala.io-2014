@@ -20,34 +20,38 @@ object Build extends Build {
     promptTheme := PromptThemes.Scalapenos
   )
 
-  lazy val appSettings = basicSettings ++ dependencySettings ++ formattingSettings ++ Revolver.settings
+  lazy val libSettings = basicSettings ++ dependencySettings ++ formattingSettings
+  lazy val appSettings = libSettings ++ Revolver.settings
 
-  lazy val root = Project("spray-routing-preso", file("."))
+  lazy val preso = Project("preso", file("."))
     .settings(basicSettings: _*)
     .aggregate(
-      e01
+      e00Domain,
+      e01Basics
     )
 
+  lazy val e00Domain = Project("e00-domain", file("examples/e00-domain"))
+    .settings(libSettings: _*)
+    .settings(libraryDependencies ++= projectDependencies)
 
-  lazy val e01 = Project("e01-basics", file("e01-basics"))
+  lazy val e01Basics = Project("e01-basics", file("examples/e01-basics"))
+    .dependsOn(e00Domain)
     .settings(appSettings: _*)
     .settings(mainClass := Some("preso.e01.basics.Main"))
-    .settings(libraryDependencies ++=
-      compile(akkaActor) ++
-      compile(akkaSlf4j) ++
-      compile(sprayCan) ++
-      compile(sprayRouting) ++
-      compile(sprayJson) ++
-      compile(ficus) ++
-      compile(logback) ++
-      test(akkaTestkit) ++
-      test(sprayTestkit) ++
-      test(scalatest))
+    .settings(libraryDependencies ++= projectDependencies)
 
 
-  // ==========================================================================
-  // ScalacOptions
-  // ==========================================================================
+  val projectDependencies =
+    compile(akkaActor) ++
+    compile(akkaSlf4j) ++
+    compile(sprayCan) ++
+    compile(sprayRouting) ++
+    compile(sprayJson) ++
+    compile(ficus) ++
+    compile(logback) ++
+    test(akkaTestkit) ++
+    test(sprayTestkit) ++
+    test(scalatest)
 
   val basicScalacOptions = Seq(
     "-encoding", "utf8",

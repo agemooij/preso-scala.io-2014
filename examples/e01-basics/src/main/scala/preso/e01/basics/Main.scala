@@ -5,12 +5,10 @@ import akka.io.IO
 
 import spray.can.Http
 
-import rfs.rebb.order._
-
 object Main extends App {
   implicit val system = ActorSystem("e01-basics")
 
-  val api = system.actorOf(Props[MainActor], "main-routing-actor")
+  val api = system.actorOf(Props[ApiRoutesActor], "main-routing-actor")
 
   IO(Http)(system) ! Http.Bind(listener = api, interface = "0.0.0.0", port = 8080)
 }

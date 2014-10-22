@@ -1,5 +1,5 @@
 package preso
-package e01.basics
+package basics
 
 import akka.actor._
 import spray.http.StatusCodes._

@@ -6,6 +6,7 @@ import SbtPrompt._
 import autoImport._
 
 import spray.revolver.RevolverPlugin.Revolver
+import laughedelic.literator.plugin.LiteratorPlugin._
 
 object Build extends Build {
   import Dependencies._
@@ -20,24 +21,31 @@ object Build extends Build {
     promptTheme := PromptThemes.Scalapenos
   )
 
-  lazy val libSettings = basicSettings ++ dependencySettings ++ formattingSettings
+  lazy val libSettings = basicSettings ++ dependencySettings ++ formattingSettings ++ Literator.settings
   lazy val appSettings = libSettings ++ Revolver.settings
 
   lazy val preso = Project("preso", file("."))
     .settings(basicSettings: _*)
     .aggregate(
-      e00Domain,
-      e01Basics
+      domain,
+      basics,
+      advanced
     )
 
-  lazy val e00Domain = Project("e00-domain", file("examples/e00-domain"))
+  lazy val domain = Project("domain", file("examples/e00-domain"))
     .settings(libSettings: _*)
     .settings(libraryDependencies ++= projectDependencies)
 
-  lazy val e01Basics = Project("e01-basics", file("examples/e01-basics"))
-    .dependsOn(e00Domain)
+  lazy val basics = Project("basics", file("examples/e01-basics"))
+    .dependsOn(domain)
     .settings(appSettings: _*)
-    .settings(mainClass := Some("preso.e01.basics.Main"))
+    .settings(mainClass := Some("preso.basics.Main"))
+    .settings(libraryDependencies ++= projectDependencies)
+
+  lazy val advanced = Project("advanced", file("examples/e02-advanced"))
+    .dependsOn(domain)
+    .settings(appSettings: _*)
+    .settings(mainClass := Some("preso.advanced.Main"))
     .settings(libraryDependencies ++= projectDependencies)
 
 

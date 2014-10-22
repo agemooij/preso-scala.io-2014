@@ -1,4 +1,4 @@
-package preso.e01.basics
+package preso.basics
 
 import akka.actor._
 import akka.io.IO
@@ -6,7 +6,7 @@ import akka.io.IO
 import spray.can.Http
 
 object Main extends App {
-  implicit val system = ActorSystem("e01-basics")
+  implicit val system = ActorSystem("preso-basics")
 
   val api = system.actorOf(Props[ApiRoutesActor], "main-routing-actor")
 

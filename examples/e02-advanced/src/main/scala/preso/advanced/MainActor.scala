@@ -8,8 +8,14 @@ import spray.json.DefaultJsonProtocol._
 import spray.routing._
 
 import util._
+import dudes._
 
-class MainActor extends HttpServiceActor with ActorLogging with Routes {
+class MainActor extends HttpServiceActor
+    with ActorLogging
+    with Routes
+    with InMemoryDudeStoreProvider
+    with ActorRefFactoryExecutionContextProvider
+    with ActorCreationSupportForActors {
   def receive = runRoute(routes)
 }
 

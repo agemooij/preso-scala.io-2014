@@ -4,29 +4,42 @@ package dudes
 
 import spray.http.StatusCodes._
 import spray.httpx.SprayJsonSupport._
+import spray.json._
 import spray.json.DefaultJsonProtocol._
 import spray.routing._
 
-trait DudesApiRoutes extends HttpService {
-  val dude = Dude("agemooij", "Age Mooij", Set("Your humble presenter"))
+import preso.advanced.util._
 
+trait DudesApiRoutes extends HttpService with DudeStoreProvider with ExecutionContextProvider {
+  // format: OFF
   val dudesApiRoutes = {
     pathPrefix("dude") {
       pathEndOrSingleSlash {
         get {
-          complete(OK, List(dude))
+          complete(OK, dudeStore.allDudes)
         } ~
-          post {
-            entity(as[Dude]) { dude ⇒
-              complete(Created)
+        post {
+          entity(as[Dude]) { dude ⇒
+            onSuccess(dudeStore.createDude(dude)) { newId ⇒
+              complete(Created, JsObject("id" -> JsNumber(newId)))
             }
           }
+        }
       } ~
-        path(LongNumber) { id ⇒
-          get {
-            complete(OK, dude)
+      path(LongNumber) { id ⇒
+        get {
+          complete(OK)
+        } ~
+        put {
+          entity(as[Dude]) { dude ⇒
+            onSuccess(dudeStore.updateDude(id, dude)) {
+              case Some(dude) ⇒ complete(Created, dude)
+              case None       ⇒ complete(NotFound)
+            }
           }
         }
+      }
     }
   }
+  // format: ON
 }

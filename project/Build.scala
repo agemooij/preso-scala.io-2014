@@ -6,7 +6,6 @@ import SbtPrompt._
 import autoImport._
 
 import spray.revolver.RevolverPlugin.Revolver
-import laughedelic.literator.plugin.LiteratorPlugin._
 
 object Build extends Build {
   import Dependencies._
@@ -21,7 +20,7 @@ object Build extends Build {
     promptTheme := PromptThemes.Scalapenos
   )
 
-  lazy val libSettings = basicSettings ++ dependencySettings ++ formattingSettings ++ Literator.settings
+  lazy val libSettings = basicSettings ++ dependencySettings ++ formattingSettings
   lazy val appSettings = libSettings ++ Revolver.settings
 
   lazy val preso = Project("preso", file("."))

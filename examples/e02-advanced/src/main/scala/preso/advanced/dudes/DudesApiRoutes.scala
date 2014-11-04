@@ -13,7 +13,7 @@ import preso.advanced.util._
 trait DudesApiRoutes extends HttpService with DudeStoreProvider with ExecutionContextProvider {
   // format: OFF
   val dudesApiRoutes = {
-    pathPrefix("dude") {
+    pathPrefix("dudes") {
       pathEndOrSingleSlash {
         get {
           complete(OK, dudeStore.allDudes)

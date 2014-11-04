@@ -17,8 +17,8 @@ trait ApiRoutes extends HttpService with ThingsApiRoutes with DudesApiRoutes {
   // format: OFF
   val apiRoutes = {
     pathPrefix("api") {
-      handleRejections(ApiRejectionHandler) {
-        respondWithHeaders(List(`Cache-Control`(`no-store`), RawHeader("Pragma", "no-cache"))) {
+      respondWithHeaders(List(`Cache-Control`(`no-store`), RawHeader("Pragma", "no-cache"))) {
+        handleRejections(ApiRejectionHandler) {
           thingsApiRoutes ~ dudesApiRoutes
         }
       }
